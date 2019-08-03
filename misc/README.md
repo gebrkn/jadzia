@@ -2,8 +2,7 @@
 
 `jadzia` generates css from javascript objects.
 
-###### example:
-```javascript
+```CSS
 let rule = {
     '#headline': {
         width: 300,
@@ -24,22 +23,6 @@ let rule = {
 
 jadzia.css(rule)
 ```
-###### output:
-```css
-#headline {
-    width: 300px;
-    padding-left: 5px;
-}
-#headline div {
-    font: 12px Arial;
-}
-#headline.active {
-    color: cyan;
-}
-#headline.active:hover {
-    color: blue;
-}
-```
 
 `jadzia` is useful if you (like me):
 
@@ -54,8 +37,7 @@ You can also pass an array of such objects or a function that returns such an ob
 
 A rule can also contain other nested rules with their respective selectors.
 
-###### example:
-```javascript
+```CSS
 let rule = {
     '#headline': {
         // css props
@@ -76,19 +58,6 @@ let rule = {
 
 jadzia.css(rule)
 ```
-###### output:
-```css
-#headline {
-    width: 300px;
-    padding-left: 5px;
-}
-#headline div {
-    font: 12px Arial;
-}
-#headline div .important {
-    font-weight: 800;
-}
-```
 
 ### selectors
 
@@ -96,8 +65,7 @@ Selectors are just like css selectors. If a nested selector starts with an `&` o
 For comma-separated nested selectors, `jadzia` creates all possible combinations of them.
 Selectors that end with an `&` are prepended to the parent.
 
-###### example:
-```javascript
+```CSS
 let rule = {
     '#headline': {
         width: 300,
@@ -127,35 +95,12 @@ let rule = {
 
 jadzia.css(rule)
 ```
-###### output:
-```css
-#headline {
-    width: 300px;
-    padding-left: 5px;
-}
-#headline div {
-    font: 12px Arial;
-}
-#headline.active {
-    color: cyan;
-}
-.dark-theme #headline {
-    color: black;
-}
-#headline em {
-    opacity: 0.3;
-}
-#headline strong {
-    opacity: 0.3;
-}
-```
 
 ### media selectors
 
 Media selectors are moved to the topmost level and merged.
 
-###### example:
-```javascript
+```CSS
 let rule = {
     '#headline': {
         '@media screen': {
@@ -179,32 +124,12 @@ let rule = {
 
 jadzia.css(rule)
 ```
-###### output:
-```css
-@media screen and (max-width: 800px) {
-    #headline {
-        width: 800px;
-    }
-    article {
-        width: 100%;
-    }
-}
-@media print {
-    #headline {
-        display: none;
-    }
-    article {
-        font-size: 11px;
-    }
-}
-```
 
 ### property names
 
 CSS property names can be quoted, or written with an underscore instead of a dash, or in camelCase:
 
-###### example:
-```javascript
+```CSS
 let rule = {
     '#headline': {
         paddingLeft: 5,
@@ -215,15 +140,6 @@ let rule = {
 }
 
 jadzia.css(rule)
-```
-###### output:
-```css
-#headline {
-    padding-left: 5px;
-    padding-top: 10px;
-    padding-bottom: 20px;
-    -webkit-transition: all 4s ease;
-}
 ```
 
 ### property values
@@ -237,8 +153,7 @@ A property value can be:
 - `null`, in which case the property will be removed (useful when extending base rules)
 - a function returning one of the above
 
-###### example:
-```javascript
+```CSS
 const minMargin = 5;
 
 const baseBlock = {
@@ -263,18 +178,6 @@ let rule = {
 
 jadzia.css(rule)
 ```
-###### output:
-```css
-#headline {
-    padding-left: 5px;
-    color: cyan;
-    border: 1px dotted white;
-    margin: 6px 8px;
-    content: '';
-    display: block;
-    opacity: 0.3;
-}
-```
 
 ## API
 
@@ -294,8 +197,7 @@ jadzia.format(object, options)
 formats a normalized object into CSS.
 
 
-###### example:
-```javascript
+```JS
 let rule = {
     '#headline': {
         width: 300,
@@ -309,18 +211,6 @@ let rule = {
 
 JSON.stringify(jadzia.object(rule), null, 4)
 ```
-###### output:
-```javascript
-{
-    "#headline": {
-        "width": "300px",
-        "padding-left": "5px"
-    },
-    "#headline div": {
-        "font": "12px Arial"
-    }
-}
-```
 
 
 The options are:
@@ -332,8 +222,7 @@ option|    |default
 `sort` | sort selectors and property values | `false`
 `unit` | default unit for numeric values | `px`
 
-###### example:
-```javascript
+```CSS
 let rule = {
     '#headline': {
         zIndex: 3,
@@ -349,20 +238,11 @@ jadzia.css(rule, {
     customs: ['main-bg-color'],
 })
 ```
-###### output:
-```css
-#headline {
-  --main-bg-color: cyan;
-  padding: 5em;
-  z-index: 3;
-}
-```
 
 `options` are passed to selector and property functions. You can put your own values there for CSS parametrization:
 
 
-###### example:
-```javascript
+```CSS
 let rule = options => ({
     '#headline': {
         width: 300,
@@ -375,14 +255,6 @@ jadzia.css(rule, {
     textColor: '#cc0000',
     borderColor: 'cyan'
 })
-```
-###### output:
-```css
-#headline {
-    width: 300px;
-    color: #cc0000;
-    border: 1px dotted cyan;
-}
 ```
 
 ## info

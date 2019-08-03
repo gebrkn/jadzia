@@ -1,0 +1,13 @@
+{
+    "name": "js",
+    "version": "0.0.1",
+    "description": "CSS with javascript",
+    "main": "index.js",
+    "scripts": {
+        "test": "node ./test.js"
+    },
+    "keywords": ["css", "preprocessor", "generator", "css-in-js"],
+    "homepage": "https://github.com/gebrkn/jadzia",
+    "author": "Georg Barikin",
+    "license": "MIT"
+}
