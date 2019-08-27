@@ -301,16 +301,18 @@ function _propName(key, options) {
 }
 
 function _propValue(val, name, options) {
-    if (_type(val) === T_NULL)
+    let t = _type(val);
+
+    if (t === T_NULL)
         return null;
 
-    if (_type(val) === T_SIMPLEARRAY)
+    if (t === T_SIMPLEARRAY)
         val = _trim(val.map(v => _propValue(v, name, options)).join(' '));
 
     if (val === '')
         return "''";
 
-    if (_type(val) === T_NUMBER && val !== 0 && !_isUnitless(name))
+    if (t === T_NUMBER && val !== 0 && !_isUnitless(name))
         return String(val) + options.unit;
 
     return String(val);

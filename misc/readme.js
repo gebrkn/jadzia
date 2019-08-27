@@ -33,5 +33,6 @@ text = text.replace(
 );
 
 fs.writeFileSync(__dirname + '/../README.md', text, 'utf8');
+fs.writeFileSync(__dirname + '/../js/README.md', text, 'utf8');
 
 
