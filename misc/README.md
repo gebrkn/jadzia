@@ -33,9 +33,9 @@ jadzia.css(rule)
 ## input
 
 `jadzia`'s input is a `rule`, which is an object containing css properties.
-You can also pass an array of such objects or a function that returns such an object.
+You can also pass an (arbitrarily nested) array of `rule`s or a function returning a `rule`.
+A rule object can also contain other nested rules with their respective selectors.
 
-A rule can also contain other nested rules with their respective selectors.
 
 ```CSS
 let rule = {
@@ -142,13 +142,34 @@ let rule = {
 jadzia.css(rule)
 ```
 
+Custom properties (like `--custom-prop`) can be written with two underscores (`__customProp`). Additionally, all unknown CSS properties are treated as custom and quoted. If you need to quote a known property, pass it in the `quote` option. If you need an unknown unquoted property, pass it in the `unquote` option:
+
+
+```CSS
+let rule = {
+    '#headline': {
+        __customProp: 'a',
+        unknownProp: 'b',
+        newProp: 'c',
+        zoom: 3,
+    }
+}
+
+jadzia.css(rule, {
+    quote: ['zoom'], 
+    unquote:['new-prop']
+})
+```
+
+
+
 ### property values
 
 A property value can be:
 
 - a string, which is taken as is
 - an _empty_ string, which will appear in css as `''` (useful for `content` props)
-- a number, the default unit will be added if required
+- a number, to which the default unit will be added if required
 - an array, which will appear space-joined
 - `null`, in which case the property will be removed (useful when extending base rules)
 - a function returning one of the above
@@ -159,7 +180,7 @@ const minMargin = 5;
 const baseBlock = {
     display: 'block',
     opacity: 0.3,
-    background: 'cyan',
+    backgroundColor: 'cyan',
 }
 
 let rule = {
@@ -172,7 +193,7 @@ let rule = {
         content: '',
 
         ...baseBlock,
-        background: null,
+        backgroundColor: null,
     }
 }
 
@@ -217,7 +238,8 @@ The options are:
 
 option|    |default
 ------|----|----
-`customs` | list of custom properties that should be preceded with two dashes | `[]`
+`quote` | list of properties that should be preceded with two dashes | `[]`
+`unquote` | list of properties that should not be preceded with two dashes | `[]`
 `indent` | indentation for the generated CSS | `4`
 `sort` | sort selectors and property values | `false`
 `unit` | default unit for numeric values | `px`
@@ -226,8 +248,8 @@ option|    |default
 let rule = {
     '#headline': {
         zIndex: 3,
-        padding: 5,
-        mainBgColor: 'cyan'
+        padding: 4,
+        zoom: 5,
     }
 }
 
@@ -235,7 +257,7 @@ jadzia.css(rule, {
     unit: 'em',
     indent: 2,
     sort: true,
-    customs: ['main-bg-color'],
+    quote: ['zoom'],
 })
 ```
 

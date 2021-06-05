@@ -82,7 +82,8 @@ let tests = [
             }
         };
         _t('nested pseudo classes', s.css(i), `
-            b:hover { border: 1; } b::after { border: 2; } 
+            b:hover { border: 1; } 
+            b::after { border: 2; } 
         `)
     },
 
@@ -178,41 +179,72 @@ let tests = [
     function () {
         let i = {
             b: {
-                __custom: 'green',
+                __shouldKeepQuote: 'green',
+                __shouldKeepQuoteTwo: 'green',
                 _mozBackgroundColor: 'blue',
+                _webkit_background_color: 'blue',
                 backgroundColor: 'red',
-
             }
         };
         _t('property names converted', s.css(i), `
-            b { --custom: green; -moz-background-color: blue; background-color: red; }
+            b { 
+                --should-keep-quote: green; 
+                --should-keep-quote-two: green; 
+                -moz-background-color: blue; 
+                -webkit-background-color: blue;
+                background-color: red; 
+            }
         `)
     },
 
     function () {
         let i = {
             b: {
-                '--custom': 'green',
+                '--should-keep-quote': 'green',
                 '-moz-background-color': 'blue',
                 'background-color': 'red',
 
             }
         };
         _t('verbatim property names', s.css(i), `
-            b { --custom: green; -moz-background-color: blue; background-color: red; }
+            b { 
+                --should-keep-quote: green; 
+                -moz-background-color: blue; 
+                background-color: red; 
+            }
         `)
     },
 
     function () {
         let i = {
             b: {
-                '--custom': 'green',
-                'customTwo': 'blue',
+                shouldQuote: 'green',
+                should_quote_two: 'green',
+            }
+        };
+        _t('unknown props quoted', s.css(i), `
+            b { 
+                --should-quote: green; 
+                --should-quote-two: green; 
+            }
+        `)
+    },
+
+    function () {
+        let i = {
+            b: {
+                __shouldBeKept: 'red',
+                fontName: 'green',
+                display: 'block',
 
             }
         };
-        _t('configurable custom props', s.css(i, {customs: ['custom-one', 'custom-two']}), `
-            b { --custom: green; --custom-two: blue; }
+        _t('configurable quoted props', s.css(i, {quote: ['font-name', 'display']}), `
+            b {
+                --should-be-kept: red; 
+                --font-name: green; 
+                --display: block; 
+            }
         `)
     },
 
@@ -220,10 +252,14 @@ let tests = [
         let i = {
             b: {
                 margin: 3,
+                flex: 4,
             }
         };
-        _t('default unit added', s.css(i), `
-            b { margin: 3px; }
+        _t('default unit added if needed', s.css(i), `
+            b { 
+                margin: 3px;
+                flex: 4; 
+            }
         `)
     },
 
@@ -231,10 +267,14 @@ let tests = [
         let i = {
             b: {
                 margin: 3,
+                fillOpacity: 5,
             }
         };
         _t('configurable default unit', s.css(i, {unit: 'em'}), `
-            b { margin: 3em; }
+            b { 
+                margin: 3em;
+                fill-opacity: 5; 
+            }
         `)
     },
 
@@ -242,10 +282,31 @@ let tests = [
         let i = {
             b: {
                 margin: '3foo',
+                fontSize: '3',
             }
         };
-        _t('string values as is', s.css(i), `
-            b { margin: 3foo; }
+        _t('string values taken as is', s.css(i), `
+            b { 
+                margin: 3foo; 
+                font-size: 3; 
+            }
+        `)
+    },
+
+    function () {
+        let i = {
+            b: {
+                customOne: 3,
+                __customTwo: 4,
+                margin: 5,
+            }
+        };
+        _t('custom props always unitless', s.css(i, {quote:['custom-one', 'margin']}), `
+            b { 
+                --custom-one: 3;
+                --custom-two: 4;
+                --margin: 5;
+            }
         `)
     },
 
@@ -257,7 +318,10 @@ let tests = [
             }
         };
         _t('unitless props', s.css(i), `
-            b { flex: 5; line-height: 32; }
+            b { 
+                flex: 5; 
+                line-height: 32; 
+            }
         `)
     },
 
@@ -283,8 +347,11 @@ let tests = [
                 }
             }
         };
-        _t('@rules no prefix', s.css(i), `
-            @keyframes hey { from { margin-top: 1; } 50% { margin-top: 2; } }
+        _t('@rules have no prefix', s.css(i), `
+            @keyframes hey { 
+                from { margin-top: 1; } 
+                50% { margin-top: 2; } 
+            }
         `)
     },
 
